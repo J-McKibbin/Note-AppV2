@@ -106,8 +106,8 @@ app.get("/activate/:token", async (req, res) =>{
        },
    });
    if(!activateToken){
-       res.status(404).json({error:"No token found"});
-       return;
+    res.status(400).send("Token doesn't exist")
+    return;
    }
 
    //else activate the user
@@ -201,6 +201,8 @@ const jwtProtect = (
         res.status(400).send("An error occurred with the JWT token")
     };
 };//pwtProtect function
+
+app.use(jwtProtect);
 
 app.get("/home", async (req, res) => {
     console.log("You are on the home page")
