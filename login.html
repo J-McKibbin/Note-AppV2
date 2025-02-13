@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>App</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <Style>
+        body {
+            text-align: center;
+            font-family: "JetBrains Mono", monospace;
+            background-color: #232323;
+            color:white;
+        }
+
+        input{
+            width:25%;
+            height:25px;
+            margin:auto;
+            margin-top:5px;
+            border-radius:5px;
+            box-shadow:2px 2px 5px black;
+        }
+
+        button{
+            margin:auto;
+            width:50%;
+            font-family: "JetBrains Mono", monospace;
+            font-weight:bold;
+            padding:10px;
+            background-color: #045e04;
+            border-radius:5px;
+            color:white;
+            transition:0.3s ease-in-out;
+        }
+
+        button:hover{
+            background-color: #032e03;
+            color: #515151;
+        }
+
+        #registerForm{
+            display:flex;
+            flex-direction: column;
+            width:50%;
+            margin:auto;
+        }
+    </Style>
+</head>
+<body>
+<br>
+<br>
+<h1>Register</h1>
+<form id="registerForm">
+    <label for="email">Email</label>
+    <input type="text" name="email" id="email" placeholder="Email" required>
+    <br>
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" placeholder="Username" required>
+    <br>
+
+    <label for="password">password</label>
+    <input type="password" name="password" id="password" placeholder="Password" required>
+    <br>
+    <label for="passwordConfirm">Confirm your password</label>
+    <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm password" required>
+    <br>
+    <button type="submit">Register</button>
+</form>
+<script>
+</script>
+</body>
+</html>
