@@ -201,11 +201,6 @@ const jwtProtect = (
             return;
         }
 
-        if(!authCookie.data){
-            console.log("No auth cookie, redirecting to login")
-            res.redirect('/')
-            return;
-        }
         const secret = Bun.env.JWT_SECRET ?? "";
         console.log("Secret: " +secret);
 
@@ -223,12 +218,15 @@ const jwtProtect = (
         res.locals.payload = payload;
         next();
     }catch(error){
-        res.status(400).send("An error occurred with the JWT token")
+        console.error(error);
+        res.clearCookie("authToken");
+        res.redirect("/");
     }
 };//jwtProtect function
 
 app.get('/register-page', async (req, res) =>{
     console.log("You are on the registration page")
+    res.sendFile(path.join(__dirname, 'register.html'));
 });
 
 app.get('/', async (req, res) =>{
