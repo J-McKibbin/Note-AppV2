@@ -5,9 +5,13 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import * as path from "node:path";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 const prisma = new PrismaClient()
 const app = express();
 app.use(express.json());
+app.use(cors());
+app.use(cookieParser());
 
 const emailTransporter = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
@@ -85,15 +89,15 @@ app.post('/register', async(req, res) => {
         from:"example@example.com",
         to:email,
         subject:"Welcome, activate your account",
-        //TODO Insert the activation token in the html below
         html:`<h1>Welcome</h1><p>Click<a href="http://localhost:3000/activate/${activationToken}">here</a></p>`
     };
 
+    console.log("Sending email content");
     //Use the email transported to send the email verification
     emailTransporter.sendMail(emailContent);
 
     //respond with a success message
-    res.status(200).json({redirect:'/home'})
+    res.status(200).json("Account registered successfully");
 });
 
 app.get("/activate/:token", async (req, res) =>{
@@ -120,7 +124,9 @@ app.get("/activate/:token", async (req, res) =>{
         }
     });
    console.log("user has been activated")
-   res.status(200).send("user activated successfully")
+    //after the token is activate redirect the user to the login page to login
+   res.sendFile(path.join(__dirname, 'login.html'));
+
 });// activate token
 
 
@@ -131,18 +137,15 @@ const loginDTO = z.object({
 });
 
 //Creating the login endpoint
-app.get("/login", async (req, res) => {
+app.post("/login", async (req, res) => {
     const parseResult = loginDTO.safeParse(req.body);
-    if(!parseResult){
-        res.status(400).send("An error occurred");
+
+
+    if (!parseResult.data){
+        res.status(404).json({error:"Login failed, try again..."});
         return;
     }
 
-    if (!parseResult.data){
-        res.status(404).json({error:"No token found"});
-        return;
-    }
-    
     //if there is no error then we can obtain the details from the result
     const {email, password} = parseResult.data;
     //then find the user using their email
@@ -154,13 +157,19 @@ app.get("/login", async (req, res) => {
 
     //verify if the user is found
     if(!user){
-        res.status(400).send("User not found")
+        res.status(400).json({error:"Login details incorrect, user doesn't exist"})
+        return;
+    }
+
+    if(!user.isActive){
+        res.status(400).json({error: "You need to activate your account,\ncheck your emails"})
         return;
     }
 
     const passwordMatch = await Bun.password.verify(password, user.passwordHash)
     if(!passwordMatch){
-        res.status(400).send("Password is incorrect")
+        res.status(400).json({error:"Details entered incorrectly..."})
+        return;
     }
 
     //if the password is correct then sign the jwt token
@@ -169,9 +178,11 @@ app.get("/login", async (req, res) => {
         username: user.username,
         updateAt: user.updatedAt,
         },
-    Bun.env.JWT_SECRET ?? ""
+    Bun.env.JWT_SECRET ?? "",
+        {expiresIn: "30s"}
     );
 
+    //attack jwt for the frontend to use
     res.status(200).json({token: jwtToken})
 });//login endpoint
 
@@ -181,38 +192,55 @@ const jwtProtect = (
     next: express.NextFunction
 ) => {
     try{
-        //check the header to see if the auth token is included
-        if(!req.header('Authorization')){
-            res.status(404).send("You don't have access to this");
-        };
+        //lets try with a cookie
+        const authCookie = req.cookies.authToken
+        console.log("Auth cookie content:" , authCookie)
+        if(!authCookie){
+            console.log("No auth cookie, redirecting to login")
+            res.redirect('/')
+            return;
+        }
 
-        //get the token from the header
-        const tokenStr = req.header("Authorization") ?? "";
-        const token = tokenStr.split("Bearer")[1];
+        if(!authCookie.data){
+            console.log("No auth cookie, redirecting to login")
+            res.redirect('/')
+            return;
+        }
+        const secret = Bun.env.JWT_SECRET ?? "";
+        console.log("Secret: " +secret);
 
+        if(!secret){
+            res.status(500).send("jwt secret doesn't exist");
+            return;
+        }
         //verify it
-        let payload = jwt.verify(token, Bun.env.JWT_SECRET ?? "");
+        let payload = jwt.verify(authCookie,secret)
+        console.log("payload:" + payload);
+        // let payload = jwt.verify(token, Bun.env.JWT_SECRET ?? "");
         if(typeof payload == 'string'){
             payload = JSON.parse(payload);
-        };
+        }
         res.locals.payload = payload;
         next();
     }catch(error){
         res.status(400).send("An error occurred with the JWT token")
-    };
-};//pwtProtect function
+    }
+};//jwtProtect function
 
-app.use(jwtProtect);
-
-app.get("/home", async (req, res) => {
-    console.log("You are on the home page")
-    res.sendFile(path.join(__dirname, "home.html"));
-})
+app.get('/register-page', async (req, res) =>{
+    console.log("You are on the registration page")
+});
 
 app.get('/', async (req, res) =>{
     console.log("You are on the login page")
-    res.sendFile(path.join(__dirname, "index.html"));
-});
+    res.sendFile(path.join(__dirname, "login.html"));
+})
+
+//The home route requires auth so I have incuded JWTprotect auth in the endpoint
+app.get("/home", jwtProtect, async (req, res) => {
+    console.log("You are on the home page", req.header('Authorization'));
+    res.sendFile(path.join(__dirname, "home.html"));
+})
 
 //Listen on a specific port for operations
 const port = 3000

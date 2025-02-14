@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>App</title>
+    <title>Login</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <Style>
         body {
@@ -23,7 +23,7 @@
 
         button{
             margin:auto;
-            width:50%;
+            width:35%;
             font-family: "JetBrains Mono", monospace;
             font-weight:bold;
             padding:10px;
@@ -38,35 +38,87 @@
             color: #515151;
         }
 
-        #registerForm{
+        #loginForm{
             display:flex;
             flex-direction: column;
             width:50%;
             margin:auto;
+        }
+
+        #errorMessage{
+            transition: ease-in-out 0.5s;
+            opacity: 0;
+            visibility: hidden;
         }
     </Style>
 </head>
 <body>
 <br>
 <br>
-<h1>Register</h1>
-<form id="registerForm">
+<h1>Login</h1>
+<form id="loginForm">
     <label for="email">Email</label>
     <input type="text" name="email" id="email" placeholder="Email" required>
-    <br>
-    <label for="username">Username</label>
-    <input type="text" name="username" id="username" placeholder="Username" required>
     <br>
 
     <label for="password">password</label>
     <input type="password" name="password" id="password" placeholder="Password" required>
     <br>
-    <label for="passwordConfirm">Confirm your password</label>
-    <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm password" required>
-    <br>
-    <button type="submit">Register</button>
+    <button type="submit">Login</button>
+    <p>Or register <a href="/register-page">here</a></p>
 </form>
+
+<p id="errorMessage"></p>
 <script>
+    //scripts for the login page
+
+    //event handler for the form
+
+    document.getElementById("loginForm").onsubmit = async function(event){
+        event.preventDefault();
+
+        const messageBox = document.getElementById("errorMessage"); // Select message element
+        //get the details the user has inputted
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        console.log(`logging users entered details:${email} ${password}`);
+
+        //axios request to the login endpoint
+        try{
+            const response = await axios.post("/login", { email, password,});
+            const token = response.data.token;
+            console.log(token);
+            //put the token into localstorage for use
+            // localStorage.setItem("authToken", token);
+            document.cookie = `authToken=${token}; path=/`;
+            // console.log("Token stored:", localStorage.getItem("authToken"));
+            messageBox.style.visibility = "visible";
+            messageBox.style.opacity = "1";
+            messageBox.textContent = "Login sucessful! Redirecting...";
+            messageBox.style.color = "green";
+            setTimeout(() =>{
+                messageBox.style.opacity = "0";
+                messageBox.style.visibility = "hidden";
+                window.location.href="/home";
+            }, 2500);
+
+        }catch(error){
+            // console.error(error)
+            document.getElementById("email").value = '';
+            document.getElementById("password").value = '';
+            messageBox.style.display = "block"
+            const errorMessage = error.response?.data?.error|| "Login failed. Try again";
+            messageBox.textContent = errorMessage;
+            messageBox.style.opacity = "1";
+            messageBox.style.visibility = "visible";
+            messageBox.style.color = 'red';
+
+            setTimeout(() =>{
+              messageBox.style.opacity = "0";
+              messageBox.style.visibility = "hidden";
+            }, 6000)
+        }
+    }
 </script>
 </body>
 </html>
