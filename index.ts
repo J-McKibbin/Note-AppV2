@@ -16,6 +16,8 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
+
+//TODO Move this into Backend folder
 const emailTransporter = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,
