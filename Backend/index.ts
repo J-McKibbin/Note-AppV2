@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5175",
+    origin: "http://localhost:5174",
     credentials: true,
 }));
 app.use(cookieParser());
@@ -200,7 +200,7 @@ app.post("/login", async (req, res) => {
 
 
 //logout
-app.post('logout',(req, res) => {
+app.post('/logout',(req, res) => {
     res.clearCookie("authToken", {httpOnly: true, path: '/'});
     res.status(200).json({message:"Log out successful!"})
 })

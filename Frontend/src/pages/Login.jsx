@@ -51,7 +51,6 @@ function Login(){
                 value={password}
                 onChange = {(e) => setPassword(e.target.value)}/>
             <button onClick={handleLogin}>Login</button>
-            {error && <p>{error}</p>}
             <p>{error}</p>
         </div>
     )
