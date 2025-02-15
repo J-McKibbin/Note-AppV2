@@ -10,7 +10,10 @@ import cookieParser from "cookie-parser";
 const prisma = new PrismaClient()
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5175",
+    credentials: true,
+}));
 app.use(cookieParser());
 
 const emailTransporter = nodemailer.createTransport({
@@ -124,7 +127,7 @@ app.get("/activate/:token", async (req, res) =>{
         }
     });
    console.log("user has been activated")
-    //after the token is activate redirect the user to the login page to login
+    //after the token is activated redirect the user to the login page to login
    res.sendFile(path.join(__dirname, 'login.html'));
 
 });// activate token
@@ -138,6 +141,7 @@ const loginDTO = z.object({
 
 //Creating the login endpoint
 app.post("/login", async (req, res) => {
+    console.log("Attempting to login");
     const parseResult = loginDTO.safeParse(req.body);
 
 
@@ -179,12 +183,25 @@ app.post("/login", async (req, res) => {
         updateAt: user.updatedAt,
         },
     Bun.env.JWT_SECRET ?? "",
-        {expiresIn: "30s"}
+        {expiresIn: "60000s"}
     );
+
+    res.cookie("authToken", jwtToken, {
+        httpOnly: true,
+        maxAge: 10 * 60 * 1000,
+    });
+    console.log("Cookie set in header")
 
     //attack jwt for the frontend to use
     res.status(200).json({token: jwtToken})
 });//login endpoint
+
+
+//logout
+app.post('logout',(req, res) => {
+    res.clearCookie("authToken", {httpOnly: true, path: '/'});
+    res.status(200).json({message:"Log out successful!"})
+})
 
 const jwtProtect = (
     req: express.Request,
@@ -192,12 +209,12 @@ const jwtProtect = (
     next: express.NextFunction
 ) => {
     try{
-        //lets try with a cookie
+        console.log("Attempting to protect");
         const authCookie = req.cookies.authToken
         console.log("Auth cookie content:" , authCookie)
         if(!authCookie){
             console.log("No auth cookie, redirecting to login")
-            res.redirect('/')
+            res.status(401).json({message: "Unauthorized, please log in"})
             return;
         }
 
@@ -220,24 +237,24 @@ const jwtProtect = (
     }catch(error){
         console.error(error);
         res.clearCookie("authToken");
-        res.redirect("/");
+        res.status(500).json({message: "An error occurred, try logging in"})
     }
 };//jwtProtect function
 
 app.get('/register-page', async (req, res) =>{
     console.log("You are on the registration page")
-    res.sendFile(path.join(__dirname, 'register.html'));
+    res.sendFile(path.join(__dirname, '/public/register.html'));
 });
 
 app.get('/', async (req, res) =>{
     console.log("You are on the login page")
-    res.sendFile(path.join(__dirname, "login.html"));
+    res.sendFile(path.join(__dirname, "/public/login.html"));
 })
 
-//The home route requires auth so I have incuded JWTprotect auth in the endpoint
+//The home route requires auth , so I have included JWTprotect auth in the endpoint
 app.get("/home", jwtProtect, async (req, res) => {
-    console.log("You are on the home page", req.header('Authorization'));
-    res.sendFile(path.join(__dirname, "home.html"));
+    console.log("You are on the home page: here are cookies", req.cookies);
+    res.sendFile(path.join(__dirname, "/public/home.html"));
 })
 
 //Listen on a specific port for operations
