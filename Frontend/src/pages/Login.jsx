@@ -11,6 +11,10 @@ function Login(){
     const navigate = useNavigate();
     // const {login} = useAuth();
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    }
+
     const handleLogin = async () => {
         setError(null);
         console.log("Login attempt with:" ,{email, password});
@@ -40,18 +44,20 @@ function Login(){
     return(
         <div>
             <h2>Login</h2>
-            <input
-                type='text'
-                placeholder='Email'
-                value={email}
-                onChange = {(e) => setEmail(e.target.value)}/>
-            <input
-                type='password'
-                placeholder='Password'
-                value={password}
-                onChange = {(e) => setPassword(e.target.value)}/>
-            <button onClick={handleLogin}>Login</button>
-            <p>{error}</p>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type='text'
+                    placeholder='Email'
+                    value={email}
+                    onChange = {(e) => setEmail(e.target.value)}/>
+                <input
+                    type='password'
+                    placeholder='Password'
+                    value={password}
+                    onChange = {(e) => setPassword(e.target.value)}/>
+                <button type='submit' onClick={handleLogin}>Login</button>
+                <p>{error}</p>
+            </form>
         </div>
     )
 }
