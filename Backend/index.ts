@@ -11,13 +11,12 @@ const prisma = new PrismaClient()
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5175",
+    origin: "http://localhost:5173",
     credentials: true,
 }));
 app.use(cookieParser());
 
 
-//TODO Move this into Backend folder
 const emailTransporter = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,

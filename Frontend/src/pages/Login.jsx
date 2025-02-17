@@ -1,7 +1,9 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import axios from "axios";
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import useAuth from "../hooks/UseAuth.jsx";
+import './PageStyles/Login&RegisterStyles.css'
+import BtnAuth from "../components/BtnAuth";
 
 
 function Login(){
@@ -43,21 +45,26 @@ function Login(){
     }
     return(
         <div>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
+            <h1>Login</h1>
+            <form onSubmit={handleSubmit} id='loginForm'>
                 <input
                     type='text'
                     placeholder='Email'
                     value={email}
+                    required
                     onChange = {(e) => setEmail(e.target.value)}/>
                 <input
                     type='password'
                     placeholder='Password'
+                    required
                     value={password}
                     onChange = {(e) => setPassword(e.target.value)}/>
-                <button type='submit' onClick={handleLogin}>Login</button>
+                <BtnAuth onClick={handleLogin} type='submit'>
+                    Login
+                </BtnAuth>
                 <p>{error}</p>
             </form>
+            <Link to='/register'>Register Here</Link>
         </div>
     )
 }

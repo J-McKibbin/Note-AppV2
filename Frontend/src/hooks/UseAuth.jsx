@@ -12,13 +12,17 @@ const UseAuth = () => {
     useEffect(() => {
         const checkAuth = async () => {
             try{
+                setLoading(true);
+                console.log("Checking Auth...");
                 const response = await axios.get('http://localhost:3000/home', {
                     withCredentials: true,
                 });
-                console.log("Logging response", response);
+                console.log("Logging response from home endpoint", response);
                 if(response.status === 200){
+                    console.log("Setting user token")
                     setUser({token: response.data.token});
                 }else{
+                    console.log("Redirecting user to login")
                     window.location.href='/';
                 }
                 //because this is undefined the user isnt being set to have content therefore
@@ -33,27 +37,36 @@ const UseAuth = () => {
         //TODO Check what the [] is for: its saying deps
     }, []);
 
+    //Login function
     const login = (token) => {
-        //set the cookie of the user using the token
+        console.log("Logging in function triggered")
         setUser({token});
+        //set the cookie of the user using the token
         document.cookie = `authToken=${token}; path=/;`;
     };
 
+    const register = (token) => {
+        console.log("Registering user")
+        setUser({token});
+        document.cookie = `authToken=${token}; path=/;`;
+    }
+
+    //Logout function
     const logout = async () => {
         try{
-            console.log("Logging out");
-            //make the request to the backend
+            console.log("Logging out function triggered");
+            //making a request to the logout endpoint
             const response = await axios.post('http://localhost:3000/logout',
                 {},{withCredentials: true})
+            //ensuring the cookie is removed from the user
             document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            //User set to null to ensure they cant access protected routes
             setUser(null);
-            console.log("You should now be redirected...")
+            console.log("Redirecting to user login")
             window.location.href='/';
         }catch(error){
             console.error(error);
         }
-        document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
-        setUser(null)
     };
 
     return {
