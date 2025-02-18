@@ -1,0 +1,17 @@
+#navContainer{
+    padding:2% 8%;
+}
+
+#navList{
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    align-items: center;
+    margin:0;
+}
+
+#navHome{
+    font-size:2.5rem;
+}

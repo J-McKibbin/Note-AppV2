@@ -1,7 +1,13 @@
-body{
-    font-family: "JetBrains Mono", monospace;
-    color:white;
-    background-color: #1b1b1b;
+#pageTitle{
+    text-align: center;
+}
+
+#btnAuth{
+    margin:auto;
+}
+
+#btnAuthContainer{
+    margin:auto;
 }
 
 form{
@@ -12,16 +18,17 @@ form{
 }
 
 form input{
-    width:50%;
+    width:40%;
     padding:5px;
     margin:5px auto;
     border-radius:5px;
     font-family: "JetBrains Mono", monospace;
 }
 
-form button {
-    width: 25%;
-    margin: 10px auto;
-    font-family: "JetBrains Mono", monospace;
-    font-weight: bold;
+#registerLink{
+    text-align:center;
+}
+
+#loginLink{
+    text-align:center;
 }

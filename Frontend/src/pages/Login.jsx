@@ -45,7 +45,7 @@ function Login(){
     }
     return(
         <div>
-            <h1>Login</h1>
+            <h1 id="pageTitle">Login</h1>
             <form onSubmit={handleSubmit} id='loginForm'>
                 <input
                     type='text'
@@ -63,8 +63,8 @@ function Login(){
                     Login
                 </BtnAuth>
                 <p>{error}</p>
+                <Link to='/register' id="registerLink">Register Here</Link>
             </form>
-            <Link to='/register'>Register Here</Link>
         </div>
     )
 }

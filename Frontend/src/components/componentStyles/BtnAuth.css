@@ -4,4 +4,12 @@
     color:white;
     border-radius:5px;
     font-size:1rem;
+    margin: 10px auto;
+    font-family: "JetBrains Mono", monospace;
+    font-weight: bold;
+}
+
+.btnAuth:hover{
+    background-color: #084c08;
+    color: #8e8e8e;
 }

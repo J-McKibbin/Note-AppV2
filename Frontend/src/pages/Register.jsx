@@ -22,7 +22,7 @@ function Register (){
 
     return(
         <div>
-            <h1>Register</h1>
+            <h1 id="pageTitle">Register</h1>
             <form onSubmit={handleSubmit} id='registerForm'>
                 <input
                     type='text'
@@ -46,8 +46,8 @@ function Register (){
                     Register
                 </BtnAuth>
                 <p>{error}</p>
+                <Link to='/' id="loginLink">Login here</Link>
             </form>
-            <Link to='/'>Login here</Link>
         </div>
     )
 }

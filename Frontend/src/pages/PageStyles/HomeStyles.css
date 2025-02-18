@@ -1,0 +1,23 @@
+#homeContainer{
+    /*border:solid white;*/
+    padding:2% 8%;
+    display:flex;
+}
+
+
+#noteContainer{
+    /*border: solid white 1px;*/
+    background: #0a3e67;
+    padding:1%;
+    width:20%;
+    border-radius:10px;
+    box-shadow: 1px 1px 1px white;
+}
+
+#noteContent{
+    width:100%;
+    background-color: white;
+    margin-left:10px;
+    border:solid #222222;
+    border-radius:10px;
+}
