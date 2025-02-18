@@ -13,7 +13,7 @@ function Home() {
             {/*<BtnLogout onClick={logout} label="Logout" />*/}
             <div id='homeContainer'>
                 <div id='noteContainer'>
-                    <h2>Notes</h2>
+                    <h2 id="notesTitle">Notes</h2>
                     <NoteItem />
                     <NoteItem />
                 </div>

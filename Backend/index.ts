@@ -197,6 +197,30 @@ app.post("/login", async (req, res) => {
     res.status(200).json({token: jwtToken})
 });//login endpoint
 
+//Get notes API
+app.get('/notes/:userID' , async (req, res) => {
+    console.log("Retrieving notes...")
+    const {userID} = req.params;
+    if(!userID){
+        res.status(400).json({error:"Enter a valid user ID"})
+        return;
+    }
+    //use the userID to search the db for notes made by the user
+    let notes = await prisma.note.findMany({
+        where:{
+            userID: userID
+        }
+    })
+
+    if(!notes){
+        res.status(400).json({error:"No notes found"})
+        return;
+    }
+
+    res.status(200).json({notes})
+
+});
+
 
 //logout
 app.post('/logout',(req, res) => {

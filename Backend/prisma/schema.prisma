@@ -28,5 +28,18 @@ model User{
   createdAt       DateTime@default(now())
   updatedAt       DateTime@updatedAt
   ActivationToken ActivationToken?
+  notes Note[]
+}
+
+//new model for the notes table
+
+model Note{
+  id    String @id @default(uuid())
+  noteTitle String
+  noteDescription String
+  userID String
+  user User @relation(fields:[userID], references: [id])
+  createdAt DateTime@default(now())
+  updatedAt DateTime@updatedAt
 }
 
