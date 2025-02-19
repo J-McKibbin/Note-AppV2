@@ -20,8 +20,31 @@
     margin-left:10px;
     border:solid #222222;
     border-radius:10px;
+    color:black;
+    display:flex;
+    flex-direction: column;
+}
+
+#noteTitle{
+    width:35%;
+    height:10%;
+    margin:auto;
+}
+
+#noteContentText{
+    width:80%;
+    height:40%;
+    margin:auto;
+}
+
+#noteContent label{
+    text-align: center;
 }
 
 #notesTitle{
     padding-left:5%;
+}
+
+#welcomeMsg{
+    text-align:center;
 }

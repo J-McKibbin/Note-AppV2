@@ -4,6 +4,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import useAuth from "../hooks/UseAuth.jsx";
 import './PageStyles/Login&RegisterStyles.css'
 import BtnAuth from "../components/BtnAuth";
+import Cookies from 'js-cookie'
 
 
 function Login(){
@@ -25,14 +26,20 @@ function Login(){
                 email,
                 password,
             }, {withCredentials: true});
-            console.log(response);
+            //
+            //TODO Below is the userid retrieved from the axios response
+            //we need to find a way to store this
+            console.log("user id: ",response.data.userID);
+            const userID = response.data.userID;
+            const username = response.data.username;
+            //setting the username and userId into cookies
+            Cookies.set("username", username);
+            Cookies.set('userID', userID);
+
 
             if(response.data.token){
                 const token = response.data.token;
                 console.log("heres the token: " ,token);
-
-                //use the login hook to pass the token
-                // login(token);
                 //navigate to home
                 navigate('/Home');
             }else{

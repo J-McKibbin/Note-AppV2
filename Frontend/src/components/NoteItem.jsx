@@ -4,12 +4,12 @@ import './componentStyles/NoteListStyles.css'
 import React from 'react';
 
 //This component will provide the note title and description
-function NoteItem() {
+function NoteItem(props) {
     return (
-        <ul id='noteItem'>
+        <ul id='noteItem' onClick={props.onClick}>
             <li>
-                <h4 id="noteTitle">Note Title</h4>
-                <p id="noteDescription">Note Description eokrgnfnperfnerpgeprogeporg eefewfgergerg</p>
+                <h4 id="noteTitle">{props.noteTitle}</h4>
+                <p id="noteDescription">{props.noteDescription}</p>
             </li>
         </ul>
     )

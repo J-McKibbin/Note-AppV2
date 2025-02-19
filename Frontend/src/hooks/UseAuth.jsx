@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Cookies from "js-cookie";
 
 
 //Use auth will allow us to create hooks for authenticating logging in and out of the app
@@ -43,6 +44,7 @@ const UseAuth = () => {
         setUser({token});
         //set the cookie of the user using the token
         document.cookie = `authToken=${token}; path=/;`;
+        // Cookies.set('authToken')
     };
 
     const register = (token) => {

@@ -6,6 +6,12 @@
     padding:0;
     overflow-wrap: break-word;
     box-shadow:1px 1px 1px black;
+    transition: 0.2s;
+}
+
+#noteItem:hover{
+    background-color: #353535;
+    /*color: #070707;*/
 }
 
 #noteItem li{

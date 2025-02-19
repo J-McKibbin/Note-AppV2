@@ -193,8 +193,7 @@ app.post("/login", async (req, res) => {
     });
     console.log("Cookie set in header")
 
-    //attack jwt for the frontend to use
-    res.status(200).json({token: jwtToken})
+    res.status(200).json({ token: jwtToken, userID: user.id, username: user.username})
 });//login endpoint
 
 //Get notes API
@@ -224,7 +223,9 @@ app.get('/notes/:userID' , async (req, res) => {
 
 //logout
 app.post('/logout',(req, res) => {
-    res.clearCookie("authToken", {httpOnly: true, path: '/'});
+    res.clearCookie("authToken");
+    res.clearCookie("userID");
+    res.clearCookie("username");
     res.status(200).json({message:"Log out successful!"})
 })
 
