@@ -11,11 +11,12 @@
 
 #noteItem:hover{
     background-color: #353535;
+    cursor: pointer;
     /*color: #070707;*/
 }
 
 #noteItem li{
-    padding:15px;
+    padding:25px;
 }
 
 #noteTitle{

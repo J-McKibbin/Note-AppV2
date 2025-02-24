@@ -215,9 +215,7 @@ app.get('/notes/:userID' , async (req, res) => {
         res.status(400).json({error:"No notes found"})
         return;
     }
-
     res.status(200).json({notes})
-
 });
 
 

@@ -8,9 +8,10 @@
     border:0;
     box-shadow: 2px 2px 5px #000;
     width:100px;
+    transition: 0.2s ease-in-out;
 }
 
 .btnLogout:hover {
-    background-color: #ac0000;
+    background-color: #7a0000;
     color: #bababa;
 }

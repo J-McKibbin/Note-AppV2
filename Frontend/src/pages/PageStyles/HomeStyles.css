@@ -26,9 +26,9 @@
 }
 
 #noteTitle{
-    width:35%;
     height:10%;
     margin:auto;
+    /*color:black;*/
 }
 
 #noteContentText{
@@ -47,4 +47,27 @@
 
 #welcomeMsg{
     text-align:center;
+}
+
+#btnDelete{
+    /*background: transparent;*/
+    position: absolute;
+    background-color: #bc0202;
+    border-radius:5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border:0;
+    box-shadow: 1px 1px black;
+    width:30px;
+}
+#btnDelete:hover {
+    color: black;
+    background-color: #550000;
+}
+
+#noteItemContainer{
+    /*position: relative;*/
+    /*padding: 15px;*/
+    /*border: 1px solid #ddd;*/
+    border-radius: 8px;
 }
