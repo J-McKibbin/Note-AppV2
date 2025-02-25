@@ -31,4 +31,11 @@ form input{
 
 #loginLink{
     text-align:center;
+    width:20%;
+    margin:auto;
+}
+
+#errorMessage{
+    color:red;
+    text-align: center;
 }

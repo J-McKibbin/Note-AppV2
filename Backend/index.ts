@@ -43,7 +43,7 @@ app.post('/register', async(req, res) => {
    //Store the entered details from the user
     const body = registerDto.safeParse(req.body);
     if(!body.success){
-        res.status(400).json({error: body.error});
+        res.status(400).json({error: "Invalid details entered try again..."});
         return;
     }
 
@@ -93,7 +93,7 @@ app.post('/register', async(req, res) => {
         from:"example@example.com",
         to:email,
         subject:"Welcome, activate your account",
-        html:`<h1>Welcome</h1><p>Click<a href="http://localhost:3000/activate/${activationToken}">here</a></p>`
+        html:`<h1>Welcome</h1><p>Click<a href="http://localhost:5173/activate/${activationToken}">here</a></p>`
     };
 
     console.log("Sending email content");
@@ -101,7 +101,7 @@ app.post('/register', async(req, res) => {
     emailTransporter.sendMail(emailContent);
 
     //respond with a success message
-    res.status(200).json("Account registered successfully");
+    res.status(201).json({message:"Account registered successfully"});
 });
 
 app.get("/activate/:token", async (req, res) =>{
@@ -129,7 +129,7 @@ app.get("/activate/:token", async (req, res) =>{
     });
    console.log("user has been activated")
     //after the token is activated redirect the user to the login page to login
-   res.sendFile(path.join(__dirname, 'login.html'));
+   // res.sendFile(path.join(__dirname, 'login.html'));
 
 });// activate token
 

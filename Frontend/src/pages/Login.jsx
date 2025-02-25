@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import {Link, useNavigate} from 'react-router-dom';
-import useAuth from "../hooks/UseAuth.jsx";
 import './PageStyles/Login&RegisterStyles.css'
+import './PageStyles/LoginStyles.css'
 import BtnAuth from "../components/BtnAuth";
 import Cookies from 'js-cookie'
 
@@ -14,12 +14,10 @@ function Login(){
     const navigate = useNavigate();
     // const {login} = useAuth();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    }
 
-    const handleLogin = async () => {
+    const handleSubmit = async (e) => {
         setError(null);
+        e.preventDefault();
         console.log("Login attempt with:" ,{email, password});
         try{
             const response = await axios.post('http://localhost:3000/login',{
@@ -66,10 +64,10 @@ function Login(){
                     required
                     value={password}
                     onChange = {(e) => setPassword(e.target.value)}/>
-                <BtnAuth onClick={handleLogin} type='submit'>
+                <BtnAuth type='submit'>
                     Login
                 </BtnAuth>
-                <p>{error}</p>
+                <p id="errorMessage">{error}</p>
                 <Link to='/register' id="registerLink">Register Here</Link>
             </form>
         </div>

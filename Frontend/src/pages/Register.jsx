@@ -9,27 +9,63 @@ function Register (){
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("")
+    const [username, setUsername] = useState("");
+    const [passwordConfirmation, setPasswordConfirmation] = useState("")
     const [error, setError] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    }
 
-    const handleRegister = () => {
-        console.log("Registering user")
-    }
+    const handleSubmit = async (e) => {
+        setError(null)
+        console.log("Starting register")
+        e.preventDefault();
+        console.log("Set error to null")
+        try{
+            console.log("sending axios req")
+            const response = await axios.post("http://localhost:3000/register",{
+                email,
+                username,
+                password,
+                passwordConfirmation
+            });
+            console.log(`ere is the response ${response.data}`);
+            console.log("checking if response.data exists")
+
+
+            console.log(`Register response: ${response.data}`);
+            //reset the register inputs
+            setEmail("")
+            setUsername("")
+            setPassword("")
+            setPasswordConfirmation("")
+
+        }catch(err){
+            console.log(`here is the error: ${err}`)
+            if (err.response?.data) {
+                // If the error response contains a message, display it
+                setError(err.response.data.error || "An unexpected error occurred");
+            } else {
+                // Fallback for other errors (e.g., network errors)
+                setError("An unexpected error occurred");
+            }
+        }
+    };
 
     return(
         <div>
             <h1 id="pageTitle">Register</h1>
             <form onSubmit={handleSubmit} id='registerForm'>
                 <input
-                    type='text'
+                    type="email"
                     placeholder='Email'
                     required
                     value={email}
                     onChange = {(e) => setEmail(e.target.value)}/>
+                <input
+                    type='text'
+                    placeholder='Username'
+                    required
+                    value={username}
+                    onChange = {(e) => setUsername(e.target.value)}/>
                 <input
                     type='password'
                     placeholder='Password'
@@ -40,12 +76,12 @@ function Register (){
                     type='password'
                     placeholder='Confirm Password'
                     required
-                    value={confirmPassword}
-                    onChange = {(e) => setConfirmPassword(e.target.value)}/>
-                <BtnAuth onClick={handleSubmit} type='submit'>
+                    value={passwordConfirmation}
+                    onChange = {(e) => setPasswordConfirmation(e.target.value)}/>
+                <BtnAuth type="submit" >
                     Register
                 </BtnAuth>
-                <p>{error}</p>
+                {error && <p id="errorMessage">{error}</p>}
                 <Link to='/' id="loginLink">Login here</Link>
             </form>
         </div>
