@@ -199,28 +199,6 @@ app.post("/login", async (req, res) => {
     res.status(200).json({ token: jwtToken, userID: user.id, username: user.username})
 });//login endpoint
 
-//Get notes API
-app.get('/notes/:userID' , async (req, res) => {
-    console.log("Retrieving notes...")
-    const {userID} = req.params;
-    if(!userID){
-        res.status(400).json({error:"Enter a valid user ID"})
-        return;
-    }
-    //use the userID to search the db for notes made by the user
-    let notes = await prisma.note.findMany({
-        where:{
-            userID: userID
-        }
-    })
-
-    if(!notes){
-        res.status(400).json({error:"No notes found"})
-        return;
-    }
-    res.status(200).json({notes})
-});
-
 
 //logout
 app.post('/logout',(req, res) => {
@@ -266,16 +244,57 @@ const jwtProtect = (
         res.status(500).json({message: "An error occurred, try logging in"})
     }
 };//jwtProtect function
-//
-// app.get('/register-page', async (req, res) =>{
-//     console.log("You are on the registration page")
-//     res.sendFile(path.join(__dirname, '/public/register.html'));
-// });
-//
-// app.get('/', async (req, res) =>{
-//     console.log("You are on the login page")
-//     res.sendFile(path.join(__dirname, "/public/login.html"));
-// })
+
+//Create note function
+app.post("/createNote", async (req, res) => {
+    //The note can be empty we just need the user id
+    const note = req.body;
+    console.log(note)
+    const userid = note.id;
+    console.log(userid)
+    if(!userid){
+        //send error
+        return res.status(400).json({error:"You need to enter a note with an id"})
+    }
+
+    //check the
+    // const userId = note.id
+    const newNote = await prisma.note.create({
+        data:{
+            noteTitle:"",
+            noteDescription:"",
+            user:{
+                connect:{id:userid},
+            }
+        },
+    });
+
+    res.status(200).json({newNote});
+    //we want to get the id, noteTitle and noteContent from the request
+});
+
+//Get notes endpoint
+app.get('/notes/:userID' , async (req, res) => {
+    console.log("Retrieving notes...")
+    const {userID} = req.params;
+    if(!userID){
+        res.status(400).json({error:"Enter a valid user ID"})
+        return;
+    }
+    //use the userID to search the db for notes made by the user
+    let notes = await prisma.note.findMany({
+        where:{
+            userID: userID
+        }
+    })
+
+    if(!notes){
+        res.status(400).json({error:"No notes found"})
+        return;
+    }
+    res.status(200).json({notes})
+});
+
 //
 // //The home route requires auth , so I have included JWTprotect auth in the endpoint
 app.get("/api/home", jwtProtect, async (req, res) => {

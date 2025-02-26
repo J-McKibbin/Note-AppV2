@@ -20,6 +20,21 @@ function Home() {
     const [description, setDescription] = useState("");
     const [selectedNoteID, setSelectedNoteID] = useState(null);
 
+    const createNote = async () => {
+        try{
+            //we want to add a new note to the notes array
+            const newNote = {
+                noteTitle: title,
+            };
+
+            // Add the new note to the state
+            setNotes((prevNotes) => [...prevNotes, newNote]);
+
+        }catch(error){
+            console.error(`an error occured: error`);
+        }
+    }
+
     const deleteNote = async (id) => {
     try{
         //send delete request using the id to api
@@ -84,6 +99,7 @@ function Home() {
         setDescription(noteContent);
     }
     useEffect(() =>{
+        document.title = "Note app"
         getNotes();
     }, [])
 
@@ -114,7 +130,7 @@ function Home() {
                 <div id='noteContainer'>
                     <div id="addNoteContainer">
                         <h2 id="notesTitle">Notes</h2>
-                        <button>Add</button>
+                        <button id="btnCreateNote" onClick={createNote}>Add</button>
                     </div>
                     {/*run through the notes retrieved*/}
                     {notes.map((note, index) => (
