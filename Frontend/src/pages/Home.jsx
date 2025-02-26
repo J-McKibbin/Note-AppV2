@@ -112,7 +112,10 @@ function Home() {
             {/*</div>*/}
             <div id='homeContainer'>
                 <div id='noteContainer'>
-                    <h2 id="notesTitle">Notes</h2>
+                    <div id="addNoteContainer">
+                        <h2 id="notesTitle">Notes</h2>
+                        <button>Add</button>
+                    </div>
                     {/*run through the notes retrieved*/}
                     {notes.map((note, index) => (
                         <div key={note.id} id="noteItemContainer">

@@ -50,7 +50,6 @@
 }
 
 #btnDelete{
-    /*background: transparent;*/
     position: absolute;
     background-color: #bc0202;
     border-radius:5px;
@@ -70,4 +69,23 @@
     /*padding: 15px;*/
     /*border: 1px solid #ddd;*/
     border-radius: 8px;
+}
+#addNoteContainer{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#addNoteContainer button{
+    border-radius:10px;
+    background-color: green;
+    font-weight:bold;
+    color:white;
+    font-size:1.2em;
+    transition: 0.2s ease-in-out;
+}
+
+#addNoteContainer button:hover{
+    background-color: #013c01;
+    color: #7e7e7e;
 }

@@ -7,14 +7,19 @@ import jwt from "jsonwebtoken";
 import * as path from "node:path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { fileURLToPath } from 'url';
 const prisma = new PrismaClient()
 const app = express();
 app.use(express.json());
+
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true,
 }));
 app.use(cookieParser());
+// Add this before server.listenHttp()
+
+
 
 
 const emailTransporter = nodemailer.createTransport({
@@ -145,12 +150,10 @@ app.post("/login", async (req, res) => {
     console.log("Attempting to login");
     const parseResult = loginDTO.safeParse(req.body);
 
-
     if (!parseResult.data){
         res.status(404).json({error:"Login failed, try again..."});
         return;
     }
-
     //if there is no error then we can obtain the details from the result
     const {email, password} = parseResult.data;
     //then find the user using their email
@@ -251,39 +254,53 @@ const jwtProtect = (
         }
         //verify it
         let payload = jwt.verify(authCookie,secret)
-        console.log("payload:" + payload);
         // let payload = jwt.verify(token, Bun.env.JWT_SECRET ?? "");
         if(typeof payload == 'string'){
             payload = JSON.parse(payload);
         }
         res.locals.payload = payload;
         next();
-    }catch(error){
+    }catch(error){jwtProtect
         console.error(error);
         res.clearCookie("authToken");
         res.status(500).json({message: "An error occurred, try logging in"})
     }
 };//jwtProtect function
-
-app.get('/register-page', async (req, res) =>{
-    console.log("You are on the registration page")
-    res.sendFile(path.join(__dirname, '/public/register.html'));
+//
+// app.get('/register-page', async (req, res) =>{
+//     console.log("You are on the registration page")
+//     res.sendFile(path.join(__dirname, '/public/register.html'));
+// });
+//
+// app.get('/', async (req, res) =>{
+//     console.log("You are on the login page")
+//     res.sendFile(path.join(__dirname, "/public/login.html"));
+// })
+//
+// //The home route requires auth , so I have included JWTprotect auth in the endpoint
+app.get("/api/home", jwtProtect, async (req, res) => {
+    console.log("Hit /api/home route");
+    res.status(200).json()
 });
-
-app.get('/', async (req, res) =>{
-    console.log("You are on the login page")
-    res.sendFile(path.join(__dirname, "/public/login.html"));
-})
-
-//The home route requires auth , so I have included JWTprotect auth in the endpoint
-app.get("/home", jwtProtect, async (req, res) => {
-    console.log("You are on the home page: here are cookies", req.cookies);
-    res.sendFile(path.join(__dirname, "/public/home.html"));
-})
 
 //Listen on a specific port for operations
 const port = 3000
 app.listen(port, () => {
     console.log(`App listening on http://localhost:${port}`);
 });
+
+if (process.env.NODE_ENV === "production") {
+    // Resolve the path to the frontend build folder (adjust if your structure is different)
+    // Use fileURLToPath if you are using ES modules with __dirname workaround:
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    const frontendPath = path.join(__dirname, "../Frontend/dist");
+    app.use(express.static(frontendPath));
+
+    // Fallback route: for any route not matched, send index.html (for client-side routing)
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(frontendPath, "index.html"));
+    });
+}
 

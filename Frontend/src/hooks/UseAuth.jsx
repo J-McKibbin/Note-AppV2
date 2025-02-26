@@ -15,7 +15,7 @@ const UseAuth = () => {
             try{
                 setLoading(true);
                 console.log("Checking Auth...");
-                const response = await axios.get('http://localhost:3000/home', {
+                const response = await axios.get('http://localhost:3000/api/home', {
                     withCredentials: true,
                 });
                 console.log("Logging response from home endpoint", response);
@@ -47,7 +47,7 @@ const UseAuth = () => {
         // Cookies.set('authToken')
     };
 
-    const register = (token) => {
+        const register = (token) => {
         console.log("Registering user")
         setUser({token});
         document.cookie = `authToken=${token}; path=/;`;

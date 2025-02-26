@@ -10,3 +10,5 @@ Next, I will add the note CRUD functionality.
 ## Running the app
 In the root dir (Auth Practice) run: bun run dev
 In the Frontend run: bun run dev 
+
+Now you can run from the backend using bun run production
