@@ -295,7 +295,7 @@ if (process.env.NODE_ENV === "production") {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
 
-    const frontendPath = path.join(__dirname, "../Frontend/dist");
+    const frontendPath = path.join(__dirname, "./dist");
     app.use(express.static(frontendPath));
 
     // Fallback route: for any route not matched, send index.html (for client-side routing)
