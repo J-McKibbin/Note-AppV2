@@ -12,4 +12,5 @@
 .btnAuth:hover{
     background-color: #084c08;
     color: #8e8e8e;
+    cursor:pointer;
 }

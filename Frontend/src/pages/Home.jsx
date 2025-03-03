@@ -19,6 +19,7 @@ function Home() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [selectedNoteID, setSelectedNoteID] = useState(null);
+    const [isSelected, setIsSelected] = useState(false);
 
     const createNote = async () => {
         try{
@@ -53,6 +54,11 @@ function Home() {
         if(response.status === 204){
             setNotes(prevNotes => prevNotes.filter(note => note.id !== id));
             console.log(`note with id: ${id} deleted successfully`)
+
+            if(notes.length === 1){
+                setIsSelected(false);
+                console.log(`this is notes.length`,notes.length)
+            }
         }
     }catch(error){
         console.error(`error deleting note: ${error}`);
@@ -100,6 +106,7 @@ function Home() {
     //function to fill the details of the note box
     const openNote = (id, noteTitle, noteContent) => {
         console.log('Opening note :',{id, noteTitle, noteContent});
+        setIsSelected(true);
         //set the content in the input boxes
         setSelectedNoteID(id);
         setTitle(noteTitle);
@@ -140,22 +147,37 @@ function Home() {
                 <div id='noteContainer'>
                     <div id="addNoteContainer">
                         <h2 id="notesTitle">Notes</h2>
-                        <button id="btnCreateNote" onClick={createNote}>Add</button>
+                        <button id="btnCreateNote" onClick={createNote}></button>
                     </div>
                     {/*run through the notes retrieved*/}
                     {notes.map((note) => (
-                        <div key={note.id} id="noteItemContainer">
-                            <button id="btnDelete" onClick={() => deleteNote(note.id)}>X</button>
+                        <div key={note.id} className="noteItemContainer">
+                            <button className="btnDelete" onClick={() => deleteNote(note.id)}>X</button>
                             <NoteItem onClick={() => openNote(note.id, note.noteTitle, note.noteDescription)} noteTitle={note.noteTitle} noteDescription={note.shortDescription}></NoteItem>
                         </div>
                     ))}
                 </div>
-                <div id="noteContent">
+                <div id="noteContent" >
+                {isSelected ? (
+                    <>
                     <label>Note Title</label>
-                    <input id='noteTitle' type='text' value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                    <input
+                        id="noteTitle"
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
                     <label>Note Content</label>
-                    <textarea id="noteContentText" value={description} onChange={(e) => {
-                        setDescription(e.target.value)}}></textarea>
+                    <textarea
+                    placeholder='Note Title'
+                        id="noteContentText"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    </>
+                ) : (
+                    <p>Select a note to edit or create a note</p>
+                )}
                 </div>
             </div>
         </div>
