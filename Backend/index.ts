@@ -247,17 +247,18 @@ const jwtProtect = (
 
 //Create note function
 app.post("/createNote", async (req, res) => {
+    console.log("Attempting to create note");
     //The note can be empty we just need the user id
     const note = req.body;
     console.log(note)
-    const userid = note.id;
-    console.log(userid)
+    const userid = note.userID;
+    console.log(`loggin user id${userid}`)
     if(!userid){
         //send error
-        return res.status(400).json({error:"You need to enter a note with an id"})
+        res.status(400).json({error:"You need to enter a note with an id"})
+        return
     }
 
-    //check the
     // const userId = note.id
     const newNote = await prisma.note.create({
         data:{
@@ -269,9 +270,27 @@ app.post("/createNote", async (req, res) => {
         },
     });
 
-    res.status(200).json({newNote});
+    res.status(201).json({newNote});
+    
     //we want to get the id, noteTitle and noteContent from the request
 });
+
+
+app.put("/updateNote/:id", async (req, res) => {
+    const noteID = req.params.id;
+    const {noteTitle, noteDescription} = req.body;
+    try{
+        const updatedNote = await prisma.note.update({
+            where:{id:noteID},
+            data: {noteTitle, noteDescription},
+        })
+        res.status(200).json({updatedNote});
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error:"Something went wrong"});
+    }
+});
+
 
 //Get notes endpoint
 app.get('/notes/:userID' , async (req, res) => {
@@ -285,8 +304,12 @@ app.get('/notes/:userID' , async (req, res) => {
     let notes = await prisma.note.findMany({
         where:{
             userID: userID
+        },
+        orderBy:{
+            updatedAt: 'desc',
         }
     })
+    console.log(`this is the notes : ${notes}`)
 
     if(!notes){
         res.status(400).json({error:"No notes found"})
@@ -294,6 +317,22 @@ app.get('/notes/:userID' , async (req, res) => {
     }
     res.status(200).json({notes})
 });
+
+
+// Delete a note
+app.delete('/deleteNote/:id' , async (req, res) => {
+    console.log("Deleting note...")
+    const {id} = req.params;
+    try{
+        const response = await prisma.note.delete({
+            where:{id:id}
+        })
+        res.status(204).json({message:"Deleted note"})
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error:`Something went wrong ${error}`})
+    }
+})
 
 //
 // //The home route requires auth , so I have included JWTprotect auth in the endpoint

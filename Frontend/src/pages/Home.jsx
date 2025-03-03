@@ -24,14 +24,24 @@ function Home() {
         try{
             //we want to add a new note to the notes array
             const newNote = {
-                noteTitle: title,
+                noteTitle: "New Note",
+                noteDescription: "",
+                userID: userID,
             };
+            const response = await axios.post("http://localhost:3000/createNote", newNote);
 
-            // Add the new note to the state
-            setNotes((prevNotes) => [...prevNotes, newNote]);
-
+            if (response.status === 201) {
+                const createdNote = response.data.newNote;
+                console.log(`created note:`,createdNote);
+                // Add the new note to the state
+                setSelectedNoteID(createdNote.id);
+                setTitle(createdNote.noteTitle);
+                setDescription(createdNote.noteDescription);
+                setNotes((prevNotes) => [...prevNotes, createdNote]);
+                console.log(notes)
+            }
         }catch(error){
-            console.error(`an error occured: error`);
+            console.error(`an error occurred: ${error}`);
         }
     }
 
@@ -40,7 +50,7 @@ function Home() {
         //send delete request using the id to api
         const response = await axios.delete(`http://localhost:3000/deleteNote/${id}`);
         //if request 200 then remove from frontend
-        if(response.status === 200){
+        if(response.status === 204){
             setNotes(prevNotes => prevNotes.filter(note => note.id !== id));
             console.log(`note with id: ${id} deleted successfully`)
         }
@@ -51,16 +61,10 @@ function Home() {
 
     const getNotes = async () => {
         try{
-            //TODO update this so it works dynamically instead of being hardcoded
-            const response = await axios.get(`http://localhost:3000/notes/1`);
-            console.log("Response from the db: ", response.data)
-            const modifiedNotes = response.data.notes.map( note => {
-                const words = note.noteDescription.split(" ");
-                // Creating the short description for the note
-                const shortenedDescription = words.slice(0, 5).join(" ").concat("...");
-                console.log("this is short desc",shortenedDescription);
-                //add shortened description to the note objects
-                return {...note, shortDescription: shortenedDescription};
+            const response = await axios.get(`http://localhost:3000/notes/${userID}`);
+            const modifiedNotes = response.data.notes.map(note => {
+                const shortenedDescription = note.noteDescription.split(" ").slice(0, 5).join(" ").concat("...");
+                return { ...note, shortDescription: shortenedDescription };
             });
             setNotes(modifiedNotes);
         }catch(error){
@@ -70,43 +74,49 @@ function Home() {
     }
 
     const updateNote = async (id, updatedTitle, updatedDescription) => {
+        console.log("Updating note with:", { id, updatedTitle, updatedDescription });
         if(!id) return;
         try{
             await axios.put(`http://localhost:3000/updateNote/${id}`, {
             noteTitle: updatedTitle,
             noteDescription: updatedDescription
         });
-
-            //update local note
-            // Update local state immediately
+            // Update local state
             setNotes((prevNotes) =>
                 prevNotes.map((note) =>
-                    note.id === id ? { ...note, noteTitle: updatedTitle, noteDescription: updatedDescription } : note
+                    note.id === id ? { ...note, noteTitle: updatedTitle,
+                        noteDescription: updatedDescription,
+                        shortDescription: updatedDescription.split(" ").slice(0, 5).join(" ").concat("..."),
+                } : note
                 )
             );
-
             console.log(`Successfully updated note: ${id}`)
         }catch(error){
             console.error(`Error updating note: ${error}`)
         }
     };
 
+
     //function to fill the details of the note box
     const openNote = (id, noteTitle, noteContent) => {
+        console.log('Opening note :',{id, noteTitle, noteContent});
         //set the content in the input boxes
         setSelectedNoteID(id);
         setTitle(noteTitle);
         setDescription(noteContent);
     }
+
     useEffect(() =>{
         document.title = "Note app"
         getNotes();
+        console.log(notes)
     }, [])
 
     //get notes should be used on mount of the app
     useEffect(() => {
         //when the app is mounted get the notes from the db
         if(selectedNoteID){
+            console.log(selectedNoteID)
             const selectedNote = notes.find((note) => note.id === selectedNoteID);
             if (selectedNote && selectedNote.noteTitle === title && selectedNote.noteDescription === description) {
                 return; // Do nothing if there are no changes
@@ -133,7 +143,7 @@ function Home() {
                         <button id="btnCreateNote" onClick={createNote}>Add</button>
                     </div>
                     {/*run through the notes retrieved*/}
-                    {notes.map((note, index) => (
+                    {notes.map((note) => (
                         <div key={note.id} id="noteItemContainer">
                             <button id="btnDelete" onClick={() => deleteNote(note.id)}>X</button>
                             <NoteItem onClick={() => openNote(note.id, note.noteTitle, note.noteDescription)} noteTitle={note.noteTitle} noteDescription={note.shortDescription}></NoteItem>
@@ -144,7 +154,8 @@ function Home() {
                     <label>Note Title</label>
                     <input id='noteTitle' type='text' value={title} onChange={(e) => setTitle(e.target.value)}></input>
                     <label>Note Content</label>
-                    <textarea id="noteContentText" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                    <textarea id="noteContentText" value={description} onChange={(e) => {
+                        setDescription(e.target.value)}}></textarea>
                 </div>
             </div>
         </div>
