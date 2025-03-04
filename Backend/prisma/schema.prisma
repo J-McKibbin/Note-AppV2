@@ -14,7 +14,7 @@ model ActivationToken{
   id   String @id @default(uuid())
   token     String @unique
   userId    String @unique
-  user      User @relation(fields:[userId], references: [id])
+  user      User @relation(fields:[userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -22,7 +22,7 @@ model ActivationToken{
 model User{
   id              String @id @default(uuid())
   email           String @unique
-  username        String @unique
+  username        String 
   passwordHash    String
   isActive        Boolean @default(false)
   createdAt       DateTime@default(now())
@@ -38,7 +38,7 @@ model Note{
   noteTitle String
   noteDescription String
   userID String
-  user User @relation(fields:[userID], references: [id])
+  user User @relation(fields:[userID], references: [id], onDelete: Cascade)
   createdAt DateTime@default(now())
   updatedAt DateTime@updatedAt
 }

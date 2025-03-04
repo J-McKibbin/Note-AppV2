@@ -64,13 +64,13 @@ app.post('/register', async(req, res) => {
     //If the passwords do match then check if the account exists already
     let user = await prisma.user.findUnique({
         where: {
-            email,
-            username,
+            email
         }
     });
     //return message if the user exists
     if(user){
         res.status(400).json({error:"Bad request"});
+        return;
     }
 
     //If the user doesn't exist then create the user
@@ -359,4 +359,6 @@ if (process.env.NODE_ENV === "production") {
         res.sendFile(path.join(frontendPath, "index.html"));
     });
 }
+
+export default app;
 
