@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "dev": "bun run --watch index.ts",
-    "production": "NODE_ENV=production bun run index.ts"
+    "production": "NODE_ENV=production bun run index.ts",
+    "test": "dotenv -e .env.test -- bunx prisma migrate dev && dotenv -e .env.test -- bun test --preload ./testing/setup.ts"
   },
   "private": true,
   "devDependencies": {

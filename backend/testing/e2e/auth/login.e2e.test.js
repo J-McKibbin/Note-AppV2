@@ -21,6 +21,7 @@ beforeEach(async () => {
 // Create hashed password
     const hashedPassword = await bcrypt.hash("password1", 10)
 
+// Seeding data
 // Creating a new user for testing on
     await prisma.user.create({
         data:{
