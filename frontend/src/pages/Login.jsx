@@ -49,10 +49,12 @@ function Login(){
         }
     }
     return(
-        <div>
-            <h1 id="pageTitle">Login</h1>
+        <div id="mainContent">
             <form onSubmit={handleSubmit} id='loginForm'>
+            <h1 id="pageTitle">Notes App <img id="titleImg" src="/icons8-write-100.png"/></h1>
+            <h1 id="formTitle">Login</h1>
                 <input
+                    id="email"
                     type='text'
                     placeholder='Email'
                     value={email}
@@ -68,7 +70,7 @@ function Login(){
                     Login
                 </BtnAuth>
                 <p id="errorMessage">{error}</p>
-                <Link to='/register' id="registerLink">Register Here</Link>
+                <p id="linkMessage">Don't have an account? <Link to='/register' id="registerLink">Register Here</Link></p>
             </form>
         </div>
     )

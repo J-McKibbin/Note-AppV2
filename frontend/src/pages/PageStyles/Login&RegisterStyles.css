@@ -1,5 +1,22 @@
-#pageTitle{
+#formTitle{
     text-align: center;
+    font-size:2em;
+    font-weight:100;
+}
+
+#pageTitle{
+    font-size:3em;
+    margin:0;
+    color:rgb(255, 255, 255);
+    padding:10px;
+    /* background: linear-gradient(to right, rgb(202, 83, 4), rgb(179, 104, 20)); */
+    background-color:rgb(10, 10, 10);
+    border-radius:20px;
+    box-shadow:1 px 1px 1px black;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap:10px;
 }
 
 #btnAuth{
@@ -13,14 +30,19 @@
 form{
     display:flex;
     flex-direction: column;
-    width:50%;
+    width:35%;
     margin:auto;
+    border-radius:20px;
+    padding:10px;
+    border:solid 3px rgb(233, 96, 5);
+    box-shadow: 1px 1px 5px rgb(255, 115, 0);
+    background-color:rgb(26, 26, 26);
 }
 
 form input{
     width:40%;
     padding:5px;
-    margin:5px auto;
+    margin:8px auto;
     border-radius:5px;
     font-family: "JetBrains Mono", monospace;
 }
@@ -37,5 +59,23 @@ form input{
 
 #errorMessage{
     color:red;
+    text-align: center;
+}
+
+#mainContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers vertically */
+    align-items: center; /* Centers horizontally */
+    margin-bottom:30px;
+    height: 100vh; /* Full height of the viewport */
+  }
+
+  #titleImg{
+    width:60px;
+    height:60px;
+  }
+
+  #linkMessage{
     text-align: center;
 }

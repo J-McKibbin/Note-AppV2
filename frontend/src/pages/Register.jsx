@@ -54,9 +54,10 @@ function Register (){
     };
 
     return(
-        <div>
-            <h1 id="pageTitle">Register</h1>
+        <div id="mainContent">
             <form onSubmit={handleSubmit} id='registerForm'>
+            <h1 id="pageTitle">Notes App <img id="titleImg" src="/icons8-write-100.png"/></h1>
+            <h1 id="formTitle">Register</h1>
                 <input
                     id="emailInput"
                     type="email"
@@ -89,7 +90,7 @@ function Register (){
                     Register
                 </BtnAuth>
                 {error && <p id="errorMessage">{error}</p>}
-                <Link to='/' id="loginLink">Login here</Link>
+                <p id="linkMessage">Have an account? <Link to='/' id="loginLink">Login here</Link></p>
             </form>
         </div>
     )
