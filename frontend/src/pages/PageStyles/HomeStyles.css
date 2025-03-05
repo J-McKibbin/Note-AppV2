@@ -95,7 +95,7 @@
 
 
 #btnCreateNote{
-    background-image: url(/public/add_icon.png);
+    background-image: url(/add_icon.png);
     background-size: cover;
     background-color:transparent;
     background-repeat: no-repeat; 

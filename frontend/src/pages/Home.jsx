@@ -19,7 +19,7 @@ function Home() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [selectedNoteID, setSelectedNoteID] = useState(null);
-    const [isSelected, setIsSelected] = useState(false);
+    const [noteSelected, setNoteSelected] = useState(false);
 
     const createNote = async () => {
         try{
@@ -56,7 +56,7 @@ function Home() {
             console.log(`note with id: ${id} deleted successfully`)
 
             if(notes.length === 1){
-                setIsSelected(false);
+                setNoteSelected(false);
                 console.log(`this is notes.length`,notes.length)
             }
         }
@@ -106,7 +106,7 @@ function Home() {
     //function to fill the details of the note box
     const openNote = (id, noteTitle, noteContent) => {
         console.log('Opening note :',{id, noteTitle, noteContent});
-        setIsSelected(true);
+        setNoteSelected(true);
         //set the content in the input boxes
         setSelectedNoteID(id);
         setTitle(noteTitle);
@@ -138,11 +138,6 @@ function Home() {
         <div>
             <Navigation></Navigation>
             <p id='welcomeMsg'>Welcome to your notes app {username}</p>
-            {/*<div>*/}
-            {/*    {notes.map((note, index) => (*/}
-            {/*        <h1 key={index}>{note.noteTitle}</h1>*/}
-            {/*    ))}*/}
-            {/*</div>*/}
             <div id='homeContainer'>
                 <div id='noteContainer'>
                     <div id="addNoteContainer">
@@ -157,8 +152,10 @@ function Home() {
                         </div>
                     ))}
                 </div>
+
+                {/* If a note is selected open the note content */}
                 <div id="noteContent" >
-                {isSelected ? (
+                {noteSelected ? (
                     <>
                     <label>Note Title</label>
                     <input
